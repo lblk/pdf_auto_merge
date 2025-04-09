@@ -50,20 +50,9 @@ def merge_pdfs_with_bookmarks(pdf_files, folder_structure, output_file):
     doc.save(output_file)
     doc.close()
 
-# 主函数
-def main():
-    #folder_path = input("请输入要搜索的文件夹路径：")  # 替换为你的文件夹路径
-    folder_path = "E:\\25汇编文件"
-    output_file = os.path.join(folder_path, "merged_with_bookmarks.pdf")  # 输出文件路径
-    # 搜索PDF文件和文件夹结构
-    pdf_files, folder_structure = search_pdf_files(folder_path)
+# 合并PDF文件并设置书签
+def merge_pdfs(input_dir, output_file):
+    pdf_files, folder_structure = search_pdf_files(input_dir)
     if not pdf_files:
-        print("未找到PDF文件。")
-        return
-
-    # 合并PDF文件并设置书签
+        raise ValueError("未找到PDF文件。")
     merge_pdfs_with_bookmarks(pdf_files, folder_structure, output_file)
-    print(f"PDF文件已合并并设置书签，保存为：{output_file}")
-
-if __name__ == "__main__":
-    main()
