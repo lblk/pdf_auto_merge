@@ -56,3 +56,9 @@ def merge_pdfs(input_dir, output_file):
     if not pdf_files:
         raise ValueError("未找到PDF文件。")
     merge_pdfs_with_bookmarks(pdf_files, folder_structure, output_file)
+
+# 当作为独立脚本运行时使用的主函数
+if __name__ == "__main__":
+    input_dir = 'E:\\25汇编文件'  # 默认输入目录
+    output_file = os.path.join(input_dir, "merged_with_bookmarks.pdf")  # 默认输出文件
+    merge_pdfs(input_dir, output_file)
