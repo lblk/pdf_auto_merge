@@ -428,6 +428,7 @@ def insert_toc_to_pdf(input_pdf_path, output_pdf_path):
         # 删除临时文件
         import os
         os.remove(temp_output_path)
+        os.remove(toc_page_path)
         
     except Exception as e:
         print(f"PyMuPDF处理时出错: {e}")
