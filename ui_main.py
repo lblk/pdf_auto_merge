@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QLabel, QFileDialog, QLineEdit, QWidget, QMessageBox
 from generate_merge import merge_pdfs
+from RegistFont_and_maketoc import add_contents_page
 
 class PDFMergeUI(QMainWindow):
     def __init__(self):
@@ -32,9 +33,17 @@ class PDFMergeUI(QMainWindow):
         self.layout.addWidget(self.output_button)
 
         # Run button
-        self.run_button = QPushButton("Run")
+        self.run_button = QPushButton("（Step1）Merge PDF")
         self.run_button.clicked.connect(self.run_merge)
         self.layout.addWidget(self.run_button)
+
+        # Add Contents Page button
+        self.contents_button = QPushButton("（Step2）Add Contents Page")
+        self.contents_button.clicked.connect(self.add_contents)
+        self.layout.addWidget(self.contents_button)
+
+        # Store last output file path
+        self.last_output_file = None
 
     def select_input_directory(self):
         directory = QFileDialog.getExistingDirectory(self, "Select Input Directory")
@@ -54,8 +63,23 @@ class PDFMergeUI(QMainWindow):
             return
 
         try:
-            QMessageBox.information(self, "Success", f"Running start")
+            # QMessageBox.information(self, "Success", f"Running start")
             merge_pdfs(input_dir, output_file)
+            self.last_output_file = output_file  # Store the output file path
             QMessageBox.information(self, "Success", f"PDF files merged successfully!\nOutput: {output_file}")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred:\n{str(e)}")
+
+    def add_contents(self):
+        if not self.last_output_file:
+            input_file, _ = QFileDialog.getOpenFileName(self, "Select Input PDF File", filter="PDF Files (*.pdf)")
+            if not input_file:
+                return
+        else:
+            input_file = self.last_output_file
+
+        try:
+            output_file = add_contents_page(input_file)
+            QMessageBox.information(self, "Success", f"Contents page added successfully!\nOutput: {output_file}")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"An error occurred while adding contents page:\n{str(e)}")

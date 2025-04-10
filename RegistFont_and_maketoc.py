@@ -13,16 +13,20 @@ from reportlab.pdfbase.ttfonts import TTFont
 from io import BytesIO
 import fitz  # PyMuPDF
 
+# 获取当前文件所在目录
+current_dir = os.path.dirname(os.path.abspath(__file__))
+resources_dir = os.path.join(current_dir, 'resources')
+
 # 注册字体
-font_path = r"C:\Users\Administrator\Desktop\仿宋_GB2312.ttf"
+font_path = os.path.join(resources_dir, "仿宋_GB2312.ttf")
 pdfmetrics.registerFont(TTFont('FangSong_GB2312', font_path))
 
 # 注册楷体字体
-kaiti_font_path = r"C:\Users\Administrator\Desktop\楷体_GB2312.ttf"  # 用户将填入正确的路径
+kaiti_font_path = os.path.join(resources_dir, "楷体_GB2312.ttf")
 pdfmetrics.registerFont(TTFont('KaiTi_GB2312', kaiti_font_path))
 
 # 注册方正小标宋字体
-xiaobiaosong_font_path = r"C:\Users\Administrator\Desktop\FZXBSJW.TTF"  # 用户将填入正确的路径
+xiaobiaosong_font_path = os.path.join(resources_dir, "FZXBSJW.TTF")
 pdfmetrics.registerFont(TTFont('FZXiaoBiaoSong-B05S', xiaobiaosong_font_path))
 
 def generate_toc_page(bookmarks, output_path):
@@ -437,7 +441,20 @@ def insert_toc_to_pdf(input_pdf_path, output_pdf_path):
     print(f"目录页面已保存为: {toc_page_path}")
     print(f"最终PDF保存为: {output_pdf_path}")
 
+def add_contents_page(input_pdf_path, output_pdf_path=None):
+    """
+    为PDF添加目录页
+    :param input_pdf_path: 输入PDF路径
+    :param output_pdf_path: 输出PDF路径，如果为None则自动生成
+    """
+    if output_pdf_path is None:
+        # 自动生成输出文件名
+        base_name = os.path.splitext(input_pdf_path)[0]
+        output_pdf_path = f"{base_name}(with content).pdf"
+    
+    insert_toc_to_pdf(input_pdf_path, output_pdf_path)
+    return output_pdf_path
+
 if __name__ == "__main__":
     input_pdf_path = 'E:\\25汇编文件\\merged_with_bookmarks.pdf'
-    output_pdf_path = 'E:\\25汇编文件\\merged_with_bookmarks2.pdf'
-    insert_toc_to_pdf(input_pdf_path, output_pdf_path)
+    add_contents_page(input_pdf_path)
