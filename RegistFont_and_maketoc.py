@@ -5,6 +5,7 @@ input_pdf_path = 'D:\\360极速浏览器X下载\\2025汇编（带书签）.pdf'
 output_pdf_path = 'D:\\360极速浏览器X下载\\2025汇编（带书签）2.pdf'
 """
 import os
+import sys
 from PyPDF2 import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -13,20 +14,30 @@ from reportlab.pdfbase.ttfonts import TTFont
 from io import BytesIO
 import fitz  # PyMuPDF
 
+def resource_path(relative_path):
+    """获取资源的绝对路径"""
+    if hasattr(sys, '_MEIPASS'):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+font_path = resource_path("fonts/your_font_file.ttf")
+
 # 获取当前文件所在目录
-current_dir = os.path.dirname(os.path.abspath(__file__))
-resources_dir = os.path.join(current_dir, 'resources')
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# resources_dir = os.path.join(current_dir, 'fonts')
 
 # 注册字体
-font_path = os.path.join(resources_dir, "仿宋_GB2312.ttf")
+font_path = resource_path("fonts/仿宋_GB2312.ttf")
 pdfmetrics.registerFont(TTFont('FangSong_GB2312', font_path))
 
 # 注册楷体字体
-kaiti_font_path = os.path.join(resources_dir, "楷体_GB2312.ttf")
+kaiti_font_path = resource_path("fonts/楷体_GB2312.ttf")
 pdfmetrics.registerFont(TTFont('KaiTi_GB2312', kaiti_font_path))
 
 # 注册方正小标宋字体
-xiaobiaosong_font_path = os.path.join(resources_dir, "FZXBSJW.TTF")
+xiaobiaosong_font_path = resource_path("fonts/FZXBSJW.TTF")
 pdfmetrics.registerFont(TTFont('FZXiaoBiaoSong-B05S', xiaobiaosong_font_path))
 
 def generate_toc_page(bookmarks, output_path):
